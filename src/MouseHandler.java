@@ -9,10 +9,12 @@ public class MouseHandler implements MouseInputListener {
     final static int WIDTH = 75;
     final static int HEIGHT = 75;
 
+    MandelbrotCore core;
     Rectangle zRect;
 
-    public MouseHandler() {
-        reset();
+    public MouseHandler(MandelbrotCore core) {
+        this.core = core;
+        resetZRect();
     }
 
     @Override
@@ -20,13 +22,19 @@ public class MouseHandler implements MouseInputListener {
         if (e.getButton() == MouseEvent.BUTTON3) {
             System.out.println("right click zooms out");
             //zoom out by one factor about the current center point
-            reset();
+            setZBox(new ComplexCoordinate(-1.5, -.5), 1, 1);
+            resetZRect();
+            new Thread(() -> {
+                synchronized(core) {
+                    core.calculatePoints();
+                }
+            });
         }
         else if (zRect == null || zRect.contains(e.getPoint())) {
             if (e.getButton() == MouseEvent.BUTTON1) {
                 System.out.println("left click zooms in");
                 //zoom in by one factor about the center of the rectangle (the point clicked)
-                reset();
+                resetZRect();
             }
         }
         else {
@@ -34,8 +42,8 @@ public class MouseHandler implements MouseInputListener {
         }
     }
 
-    public void reset() {
-        zRect = new Rectangle();
+    public void resetZRect() {
+        zRect = new Rectangle(new Point(-WIDTH, -HEIGHT));
     }
 
     public void setZRect(Point p) {
@@ -44,6 +52,12 @@ public class MouseHandler implements MouseInputListener {
 
     public Rectangle getZRect() {
         return zRect;
+    }
+
+    public void setZBox(ComplexCoordinate z, double xR, double yR) {
+        core.setXYStart(z);
+        core.setXRange(xR);
+        core.setYRange(yR);
     }
 
     @Override

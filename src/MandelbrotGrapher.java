@@ -14,6 +14,7 @@ public class MandelbrotGrapher {
         frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         core = new MandelbrotCore(new ComplexCoordinate(-2.2, -1), 2, 2);
+        // core = new MandelbrotCore(new ComplexCoordinate(-1.5, -.5), 1, 1);
         panel = new MandelbrotPanel(core);
 
         frame.setContentPane(panel);
@@ -22,6 +23,7 @@ public class MandelbrotGrapher {
         frame.setVisible(true);
         frame.pack();
 
+        //TODO: make this thread better (not infinite loop)
         new Thread(() -> { //animation thread
             for(;;) {
                 panel.repaint();
@@ -34,7 +36,9 @@ public class MandelbrotGrapher {
         }).start();
 
         new Thread(() -> { //point calculation needs to be in a thread
-            core.calculatePoints();
+            synchronized(core) {
+                core.calculatePoints();
+            }
         }).start();
 
         //adding the points to an arrayList must be in a thread as well possibly

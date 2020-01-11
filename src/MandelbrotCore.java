@@ -5,7 +5,7 @@ public class MandelbrotCore {
     final static double WIDTH = 600;
     final static double HEIGHT = 600;
 
-    final static double DENSITY = .7; //density (decimal <= 1) where 1 == 100% density
+    final static double DENSITY = .9; //density (decimal <= 1) where 1 == 100% density
 
     final int max = 255;
 
@@ -26,6 +26,18 @@ public class MandelbrotCore {
         pointList = new ArrayList<ColoredComplexCoordinate>();
     }
 
+    public void setXYStart(ComplexCoordinate xyS) {
+        this.xyStart = xyS;
+    }
+
+    public void setXRange(double r) {
+        this.xRange = r;
+    }
+
+    public void setYRange(double r) {
+        this.yRange = r;
+    }
+
     public ComplexCoordinate xyStart() {
         return xyStart;
     }
@@ -35,11 +47,14 @@ public class MandelbrotCore {
     }
 
     public void calculatePoints() {
+        pointList.removeAll(pointList);
         for (ComplexCoordinate x = new ComplexCoordinate(xyStart().real(), xyStart().imaginary()); nextPoint(x) != null; x = nextPoint(x)) {
             int iter = ConvergenceTester.miter(x, max);
             ColoredComplexCoordinate c = new ColoredComplexCoordinate(x, iter);
             synchronized(pointList) {
-                pointList.add(c);
+                if (c != null ) {
+                    pointList.add(c);
+                }
             }
         }
     }

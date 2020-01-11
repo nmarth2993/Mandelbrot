@@ -11,7 +11,7 @@ public class MandelbrotPanel extends JPanel {
 
     public MandelbrotPanel(MandelbrotCore core) {
         this.core = core;
-        handler = new MouseHandler();
+        handler = new MouseHandler(core);
         addMouseListener(handler);
     }
 

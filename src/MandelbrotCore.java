@@ -2,8 +2,10 @@ import java.util.ArrayList;
 
 public class MandelbrotCore {
 
-    final static double WIDTH = 500;
-    final static double HEIGHT = 500;
+    final static double WIDTH = 600;
+    final static double HEIGHT = 600;
+
+    final static double DENSITY = .7; //density (decimal <= 1) where 1 == 100% density
 
     final int max = 255;
 
@@ -67,11 +69,15 @@ public class MandelbrotCore {
     }
 
     public double realIncrement() {
-        return xRange() / WIDTH;
+        return (xRange() / WIDTH) * (1 / DENSITY);
+        //reciprocal of density constant
+        //because half density only does every 2 points
     }
 
     public double imaginaryIncrement() {
-        return yRange() / HEIGHT;
+        return (yRange() / HEIGHT) * (1 / DENSITY);
+        //reciprocal of density constant
+        //because half density only does every 2 points
     }
 
     public void setRealIncrement(double inc) {

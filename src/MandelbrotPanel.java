@@ -1,3 +1,5 @@
+import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
@@ -5,9 +7,12 @@ import javax.swing.JPanel;
 
 public class MandelbrotPanel extends JPanel {
     MandelbrotCore core;
+    MouseHandler handler;
 
     public MandelbrotPanel(MandelbrotCore core) {
         this.core = core;
+        handler = new MouseHandler();
+        addMouseListener(handler);
     }
 
     public void paintComponent(Graphics g) {
@@ -27,5 +32,9 @@ public class MandelbrotPanel extends JPanel {
                 g2d.fillRect(xPixel, yPixel, 2, 2);
             }
         }
+        g2d.setColor(Color.YELLOW);
+        g2d.setStroke(new BasicStroke(6f));
+        g2d.draw(handler.getZRect());
+        // System.out.println("x: " + handler.getZRect().x + " y: " + handler.getZRect().y);
     }
 }

@@ -12,12 +12,13 @@ public class MandelbrotGrapher {
 
     public MandelbrotGrapher() {
         frame = new JFrame();
-        core = new MandelbrotCore(new ComplexCoordinate(-.5, -.5), 1.5, 1.5);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        core = new MandelbrotCore(new ComplexCoordinate(-2.2, -1), 2, 2);
         panel = new MandelbrotPanel(core);
 
         frame.setContentPane(panel);
 
-        frame.setPreferredSize(new Dimension((int) MandelbrotCore.WIDTH, (int) MandelbrotCore.HEIGHT));
+        panel.setPreferredSize(new Dimension((int) MandelbrotCore.WIDTH, (int) MandelbrotCore.HEIGHT));
         frame.setVisible(true);
         frame.pack();
 
@@ -25,14 +26,20 @@ public class MandelbrotGrapher {
             for(;;) {
                 panel.repaint();
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(50);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         }).start();
 
-        core.calculatePoints();
+        new Thread(() -> { //point calculation needs to be in a thread
+            core.calculatePoints();
+        }).start();
+
+        //adding the points to an arrayList must be in a thread as well possibly
+        //because the list is synchronized elsewhere, I think the main thread will hold it
+        //until done if it's not in a thread
     }
 
     public MandelbrotCore getCore() {
@@ -41,6 +48,7 @@ public class MandelbrotGrapher {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
+            // JOptionPane.showMessageDialog(null, "Note that the set is being calculated at lower density for performace");
             new MandelbrotGrapher();
             System.out.println("done.");
         });

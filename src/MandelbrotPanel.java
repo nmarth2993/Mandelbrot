@@ -20,7 +20,8 @@ public class MandelbrotPanel extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
 
         synchronized (core.getPointList()) {
-            for (ColoredComplexCoordinate x : core.getPointList()) {
+            if (core.getPointList().size() != 0) {
+                for (ColoredComplexCoordinate x : core.getPointList()) {
 
                 int xPixel = (int) ((x.getZ().real() - core.xyStart().real()) * (MandelbrotCore.WIDTH / core.xRange()));
                 int yPixel = (int) ((core.xyStart().imaginary() + core.yRange() - x.getZ().imaginary())
@@ -37,4 +38,6 @@ public class MandelbrotPanel extends JPanel {
         g2d.draw(handler.getZRect());
         // System.out.println("x: " + handler.getZRect().x + " y: " + handler.getZRect().y);
     }
+}
+
 }

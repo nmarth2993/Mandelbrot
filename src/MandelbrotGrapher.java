@@ -35,6 +35,8 @@ public class MandelbrotGrapher {
             }
         }).start();
 
+        //TODO: fix this thread so that it plays nice with the zooming function
+        //as of now, this thread will have the lock...
         new Thread(() -> { //point calculation needs to be in a thread
             synchronized(core) {
                 core.calculatePoints();

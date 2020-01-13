@@ -68,6 +68,7 @@ public class MandelbrotCore {
                 }
             }
         }
+        //TODO: thread this part so that the calculation is very fast :)
     }
 
     public ComplexCoordinate nextPoint(ComplexCoordinate z) {

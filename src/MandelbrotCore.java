@@ -1,16 +1,18 @@
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class MandelbrotCore {
 
     final static double WIDTH = 600;
     final static double HEIGHT = 600;
 
-    final static double DENSITY = .9; // density (decimal <= 1) where 1 == 100% density
+    final static double DENSITY = 1; // density (decimal <= 1) where 1 == 100% density
 
     final int max = 255;
 
     ComplexCoordinate xyStart;
-    ArrayList<ColoredComplexCoordinate> pointList;
+    List<ColoredComplexCoordinate> pointList;
 
     double xRange;
     double yRange;
@@ -23,7 +25,7 @@ public class MandelbrotCore {
         this.yRange = yRange;
         // this.realIncrement = realIncrement;
         // this.imaginaryIncrement = imaginaryIncrement;
-        pointList = new ArrayList<ColoredComplexCoordinate>();
+        pointList = Collections.synchronizedList(new ArrayList<ColoredComplexCoordinate>());
     }
 
     public void setXYStart(ComplexCoordinate xyS) {
@@ -42,19 +44,21 @@ public class MandelbrotCore {
         return xyStart;
     }
 
-    public ArrayList<ColoredComplexCoordinate> getPointList() {
+    public List<ColoredComplexCoordinate> getPointList() {
         return pointList;
     }
 
+    /*
     public void calculatePoints() {
 
         // System.out.println("calc points");
 
-        //TODO: disallow user input when first plotting the set
+        // TODO: disallow user input when first plotting the set
 
-        synchronized(pointList) {
+        synchronized (pointList) {
             // System.out.println("has lock");
             pointList = new ArrayList<ColoredComplexCoordinate>();
+            //
             // System.out.println("points removed");
         }
 
@@ -68,7 +72,51 @@ public class MandelbrotCore {
                 }
             }
         }
-        //TODO: thread this part so that the calculation is very fast :)
+        // TODO: thread this part so that the calculation is very fast :)
+    }
+    */
+
+    public void calculatePointsThreaded() {
+        synchronized (pointList) {
+            pointList = Collections.synchronizedList(new ArrayList<ColoredComplexCoordinate>());
+        }
+        synchronized (pointList) {
+            new Thread(() -> {
+                for (ComplexCoordinate x = new ComplexCoordinate(xyStart().real(), xyStart().imaginary()); nextPoint(x)
+                        .real() < (xyStart().real() + xRange()) / 2; x = nextPoint(x)) {
+                    int iter = ConvergenceTester.miter(x, max);
+                    if (x == null) {
+                        System.out.println("x is null at point " + x);
+                        System.out.println("on thread 1");
+                        System.exit(1);
+                    }
+                    ColoredComplexCoordinate c = new ColoredComplexCoordinate(x, iter);
+                    if (c != null && c.getZ() != null) {
+                        pointList.add(c);
+                    }
+                }
+                System.out.println("thread 1 done.");
+            }).start();
+        }
+
+        synchronized (pointList) {
+            new Thread(() -> {
+                for (ComplexCoordinate x = new ComplexCoordinate(xyStart().real() + xRange() / 2,
+                        xyStart().imaginary()); nextPoint(x) != null; x = nextPoint(x)) {
+                    int iter = ConvergenceTester.miter(x, max);
+                    if (x == null) {
+                        System.out.println("x is null at point " + x);
+                        System.out.println("on thread 2");
+                        System.exit(1);
+                    }
+                    ColoredComplexCoordinate c = new ColoredComplexCoordinate(x, iter);
+                    if (c != null && c.getZ() != null) {
+                        pointList.add(c);
+                    }
+                }
+                System.out.println("thread 2 done.");
+            }).start();
+        }
     }
 
     public ComplexCoordinate nextPoint(ComplexCoordinate z) {

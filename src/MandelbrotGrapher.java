@@ -13,7 +13,9 @@ public class MandelbrotGrapher {
     public MandelbrotGrapher() {
         frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        core = new MandelbrotCore(new ComplexCoordinate(-2.2, -1), 2, 2);
+        // core = new MandelbrotCore(new ComplexCoordinate(0, 1), .5, .5);
+        // core = new MandelbrotCore(new ComplexCoordinate(-2.2, -1), 2, 2);
+        core = new MandelbrotCore(new ComplexCoordinate(0, 0), 0.5, 0.5);
         // core = new MandelbrotCore(new ComplexCoordinate(-1.5, -.5), 1, 1);
         panel = new MandelbrotPanel(core);
 
@@ -39,7 +41,8 @@ public class MandelbrotGrapher {
         //as of now, this thread will have the lock...
         new Thread(() -> { //point calculation needs to be in a thread
             synchronized(core) {
-                core.calculatePoints();
+                core.calculatePointsThreaded();
+                //XXX: using threaded points calculator
             }
         }).start();
 

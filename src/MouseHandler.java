@@ -9,8 +9,8 @@ import javax.swing.event.MouseInputListener;
 
 public class MouseHandler implements MouseInputListener {
 
-    final static int WIDTH = (int) (MandelbrotCore.WIDTH / 10);
-    final static int HEIGHT = (int) (MandelbrotCore.HEIGHT / 10);
+    final static int WIDTH = (int) (MandelbrotCore.WIDTH / 5);
+    final static int HEIGHT = (int) (MandelbrotCore.HEIGHT / 5);
 
     MandelbrotCore core;
     Rectangle zRect;
@@ -46,7 +46,8 @@ public class MouseHandler implements MouseInputListener {
                 System.out.println("zoom thread fired");
                 synchronized(core) {
                     System.out.println("re-calculating...");
-                    core.calculatePoints();
+                    core.calculatePointsThreaded();
+                    //XXX: threaded
                 }
                 System.out.println("done.");
                 working = false;
@@ -60,11 +61,13 @@ public class MouseHandler implements MouseInputListener {
                 
                 //XXX: refactor to use zoom object
                 setZBox(zoomXY(e), zoomXRange(e), zoomYRange(e));
+                System.out.println("xystart: " + core.xyStart().real() + ", " + core.xyStart().imaginary() + "\nxRange: " + core.xRange() + "\nyRange: " + core.yRange());
                 resetZRect();
                 new Thread(() -> {
                     synchronized(core) {
                         System.out.println("re-calculating...");
-                        core.calculatePoints();
+                        core.calculatePointsThreaded();
+                        //XXX: threaded
                     }
                     System.out.println("done");
                     working = false;
@@ -77,7 +80,7 @@ public class MouseHandler implements MouseInputListener {
     }
 
     public ComplexCoordinate zoomXY(MouseEvent e) {
-        return new ComplexCoordinate(core.realIncrement * (getZRect().getMinX()), core.imaginaryIncrement() * (getZRect().getMinY()));
+        return new ComplexCoordinate(core.realIncrement() * (getZRect().getMinX()), core.imaginaryIncrement() * (getZRect().getMinY()));
     }
 
     public double zoomXRange(MouseEvent e) {

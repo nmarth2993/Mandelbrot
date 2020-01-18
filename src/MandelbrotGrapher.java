@@ -13,10 +13,9 @@ public class MandelbrotGrapher {
     public MandelbrotGrapher() {
         frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        // core = new MandelbrotCore(new ComplexCoordinate(0, 1), .5, .5);
         // core = new MandelbrotCore(new ComplexCoordinate(-2.2, -1), 2, 2);
-        core = new MandelbrotCore(new ComplexCoordinate(0, 0), 0.5, 0.5);
-        // core = new MandelbrotCore(new ComplexCoordinate(-1.5, -.5), 1, 1);
+        // core = new MandelbrotCore(new ComplexCoordinate(0, 0), 0.5, 0.5);
+        core = new MandelbrotCore(new ComplexCoordinate(-1.5, -.5), 1, 1);
         panel = new MandelbrotPanel(core);
 
         frame.setContentPane(panel);

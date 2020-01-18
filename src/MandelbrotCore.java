@@ -7,7 +7,7 @@ public class MandelbrotCore {
     final static double WIDTH = 600;
     final static double HEIGHT = 600;
 
-    final static double DENSITY = 1; // density (decimal <= 1) where 1 == 100% density
+    final static double DENSITY = .5; // density (decimal <= 1) where 1 == 100% density
 
     final int max = 255;
 
@@ -83,17 +83,20 @@ public class MandelbrotCore {
         synchronized (pointList) {
             new Thread(() -> {
                 for (ComplexCoordinate x = new ComplexCoordinate(xyStart().real(), xyStart().imaginary()); nextPoint(x)
-                        .real() < (xyStart().real() + xRange()) / 2; x = nextPoint(x)) {
+                        .real() < (xyStart().real() + xRange() / 2); x = nextPoint(x)) {
                     int iter = ConvergenceTester.miter(x, max);
-                    if (x == null) {
-                        System.out.println("x is null at point " + x);
-                        System.out.println("on thread 1");
-                        System.exit(1);
-                    }
+                    // if (x == null) {
+                        // System.out.println("x is null at point " + x);
+                        // System.out.println("on thread 1");
+                        // System.exit(1);
+                    // }
                     ColoredComplexCoordinate c = new ColoredComplexCoordinate(x, iter);
                     if (c != null && c.getZ() != null) {
                         pointList.add(c);
+                        // System.out.println("point added from thread 1");
                     }
+                    // System.out.println("next value of real: " + nextPoint(x).real());
+                    // System.out.println("stop val: " + xyStart().real() + xRange() / 2);
                 }
                 System.out.println("thread 1 done.");
             }).start();
@@ -104,14 +107,15 @@ public class MandelbrotCore {
                 for (ComplexCoordinate x = new ComplexCoordinate(xyStart().real() + xRange() / 2,
                         xyStart().imaginary()); nextPoint(x) != null; x = nextPoint(x)) {
                     int iter = ConvergenceTester.miter(x, max);
-                    if (x == null) {
-                        System.out.println("x is null at point " + x);
-                        System.out.println("on thread 2");
-                        System.exit(1);
-                    }
+                    // if (x == null) {
+                    //     System.out.println("x is null at point " + x);
+                    //     System.out.println("on thread 2");
+                    //     System.exit(1);
+                    // }
                     ColoredComplexCoordinate c = new ColoredComplexCoordinate(x, iter);
                     if (c != null && c.getZ() != null) {
                         pointList.add(c);
+                        // System.out.println("point added from thread 2");
                     }
                 }
                 System.out.println("thread 2 done.");

@@ -5,7 +5,6 @@ import java.awt.event.MouseEvent;
 import javax.swing.event.MouseInputListener;
 
 //TODO: implement previous zoom levels
-//TODO: the zooming is very steep right now...
 
 public class MouseHandler implements MouseInputListener {
 
@@ -26,6 +25,10 @@ public class MouseHandler implements MouseInputListener {
         resetZRect();
     }
 
+    public void setWorking(boolean working) {
+        this.working = working;
+    }
+
     @Override
     public void mouseClicked(MouseEvent e) {
         if (working) {
@@ -33,7 +36,7 @@ public class MouseHandler implements MouseInputListener {
         }
         if (e.getButton() == MouseEvent.BUTTON3) {
             working = true;
-            System.out.println("right click zooms out");
+            // System.out.println("right click zooms out");
             //zoom out by one factor about the current center point
             // if (previousZooms.size() == 1) {
             //     working = false;
@@ -43,30 +46,35 @@ public class MouseHandler implements MouseInputListener {
             // setZBox(previousZooms.pop());
             resetZRect();
             new Thread(() -> {
-                System.out.println("zoom thread fired");
+                // System.out.println("zoom thread fired");
                 synchronized(core) {
-                    System.out.println("re-calculating...");
-                    core.calculatePointsThreaded();
-                    //XXX: threaded
+                    // new MandelbrotCore(new ComplexCoordinate(-2, -1.5), 3, 3);
+                    core.setXYStart(new ComplexCoordinate(-2, -1.5));
+                    core.setXRange(3);
+                    core.setYRange(3);
+                    // System.out.println("re-calculating...");
+                    core.calculatePoints(this);
                 }
                 System.out.println("done.");
                 working = false;
             }).start();
         }
+        //FIXME: this piece of code is confusing
         else if (zRect == null || zRect.contains(e.getPoint())) {
             if (e.getButton() == MouseEvent.BUTTON1) {
                 working = true;
-                System.out.println("left click zooms in");
+                // System.out.println("left click zooms in");
                 //zoom in by one factor about the center of the rectangle (the point clicked)
                 
                 //XXX: refactor to use zoom object
+                //FIXME: incorrectly zooming...
                 setZBox(zoomXY(e), zoomXRange(e), zoomYRange(e));
-                System.out.println("xystart: " + core.xyStart().real() + ", " + core.xyStart().imaginary() + "\nxRange: " + core.xRange() + "\nyRange: " + core.yRange());
+                // System.out.println("xystart: " + core.xyStart().real() + ", " + core.xyStart().imaginary() + "\nxRange: " + core.xRange() + "\nyRange: " + core.yRange());
                 resetZRect();
                 new Thread(() -> {
                     synchronized(core) {
                         System.out.println("re-calculating...");
-                        core.calculatePointsThreaded();
+                        core.calculatePoints(this);
                         //XXX: threaded
                     }
                     System.out.println("done");
@@ -80,7 +88,7 @@ public class MouseHandler implements MouseInputListener {
     }
 
     public ComplexCoordinate zoomXY(MouseEvent e) {
-        return new ComplexCoordinate(core.realIncrement() * (getZRect().getMinX()), core.imaginaryIncrement() * (getZRect().getMinY()));
+        return new ComplexCoordinate(core.realIncrement() * (getZRect().getMinX()), core.imaginaryIncrement() * (getZRect().getMaxY()));
     }
 
     public double zoomXRange(MouseEvent e) {
@@ -93,6 +101,7 @@ public class MouseHandler implements MouseInputListener {
 
     public void resetZRect() {
         zRect = new Rectangle(new Point(-WIDTH, -HEIGHT));
+        //make rectangle off the screen
     }
 
     public void setZRect(Point p) {

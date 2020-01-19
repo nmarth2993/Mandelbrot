@@ -16,7 +16,7 @@ public class ComplexCoordinate {
         return b;
     }
 
-    public double mod() {
+    public double mod() { //distance from zero
         return Math.hypot(real(), imaginary());
     }
 
@@ -40,6 +40,5 @@ public class ComplexCoordinate {
         return (real() != 0 ? real() : "") + (imaginary() > 0 && real() != 0 ? "+" : "") + (imaginary() != 0 ? (imaginary() + "i") : "");
         //if either term is 0, no need to print
         //if b is negative, don't print the + sign
-        // return "" + imaginary();
     }
 }

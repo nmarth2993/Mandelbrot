@@ -65,6 +65,7 @@ public class MandelbrotCore {
                         .real() < (xyStart().real() + xRange() / 2); x = nextPoint(x)) {
                     int iter = ConvergenceTester.miter(x, max);
                     ColoredComplexCoordinate c = new ColoredComplexCoordinate(x, iter);
+                    // ColoredComplexCoordinate c = new ColoredComplexCoordinate(x, ConvergenceTester.miterCol(x, max));
                     if (c != null && c.getZ() != null) {
                         pointList.add(c);
                         // System.out.println("point added from thread 1");
@@ -82,6 +83,7 @@ public class MandelbrotCore {
                         xyStart().imaginary()); nextPoint(x) != null; x = nextPoint(x)) {
                     int iter = ConvergenceTester.miter(x, max);
                     ColoredComplexCoordinate c = new ColoredComplexCoordinate(x, iter);
+                    // ColoredComplexCoordinate c = new ColoredComplexCoordinate(x, ConvergenceTester.miterCol(x, max));
                     if (c != null && c.getZ() != null) {
                         pointList.add(c);
                         // System.out.println("point added from thread 2");

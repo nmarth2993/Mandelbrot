@@ -32,7 +32,6 @@ public class MandelbrotGrapher {
         frame.setVisible(true);
         frame.pack();
 
-        // TODO, nice to have: make this thread better (not infinite loop)
         new Thread(() -> { // animation thread
             for (;;) {
                 panel.repaint();

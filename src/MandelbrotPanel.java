@@ -14,6 +14,8 @@ public class MandelbrotPanel extends JPanel {
     MandelbrotCore core;
     MouseHandler handler;
 
+    final static boolean drawAxes = true;
+
     public MandelbrotPanel(MandelbrotCore core) {
         this.core = core;
         handler = new MouseHandler(core, this);
@@ -41,6 +43,7 @@ public class MandelbrotPanel extends JPanel {
             }
 
             //drawing axes:
+            if (drawAxes) {
             if (core.xyStart().real() < 0 && core.xyStart().real() + core.xRange() > 0) {
                 int yAxis = (int) (-core.xyStart().real() * (MandelbrotCore.WIDTH / core.xRange()));
 					g2d.setColor(Color.GREEN);
@@ -51,6 +54,7 @@ public class MandelbrotPanel extends JPanel {
 					g2d.setColor(Color.GREEN);
                 g.drawLine(0, xAxis, getWidth(), xAxis);
             }
+        }
 
             //printing start and end points
             if (!core.getPointList().isEmpty()) {

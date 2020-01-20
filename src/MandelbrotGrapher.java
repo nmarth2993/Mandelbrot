@@ -37,7 +37,7 @@ public class MandelbrotGrapher {
             for (;;) {
                 panel.repaint();
                 try {
-                    Thread.sleep(50);
+                    Thread.sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -58,7 +58,6 @@ public class MandelbrotGrapher {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             new MandelbrotGrapher();
-            System.out.println("done.");
         });
     }
 }

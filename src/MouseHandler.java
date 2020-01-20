@@ -12,13 +12,15 @@ public class MouseHandler implements MouseInputListener {
     final static int HEIGHT = (int) (MandelbrotCore.HEIGHT / 5);
 
     MandelbrotCore core;
+    MandelbrotPanel panel;
     Rectangle zRect;
     // Stack<Zoom> previousZooms;
     boolean working;
 
-    public MouseHandler(MandelbrotCore core) {
+    public MouseHandler(MandelbrotCore core, MandelbrotPanel panel) {
         working = false;
         this.core = core;
+        this.panel = panel;
         // previousZooms = new Stack<Zoom>();
         //seed the previous zooms with the original zbox
         // previousZooms.add(new Zoom(core.xyStart(), core.xRange(), core.yRange()));
@@ -45,6 +47,7 @@ public class MouseHandler implements MouseInputListener {
             // }
             // setZBox(previousZooms.pop());
             resetZRect();
+            panel.repaint();
             new Thread(() -> {
                 // System.out.println("zoom thread fired");
                 synchronized(core) {
@@ -63,12 +66,9 @@ public class MouseHandler implements MouseInputListener {
             System.out.println("click at: (" + e.getX() + ", " + e.getY() + ")");
             if (getZRect().contains(e.getPoint())) {
                 working = true;
-                
-                //XXX: refactor to use zoom object
-                //FIXME: incorrectly zooming...
                 setZBox(new Zoom(zoomXY(e), zoomXRange(e), zoomYRange(e)));
-                // setZBox(zoomXY(e), zoomXRange(e), zoomYRange(e));
                 resetZRect();
+                panel.repaint();
                 new Thread(() -> {
                     synchronized(core) {
                         System.out.println("re-calculating...");
@@ -80,12 +80,10 @@ public class MouseHandler implements MouseInputListener {
             }
             else {
                 setZRect(e.getPoint());
-                System.out.println("upper left: (" + getZRect().getX() + ", " + getZRect().getY() + ")");
-                System.out.println("lower left: (" + getZRect().getMinX() + ", " + getZRect().getMaxY() + ")");
+                panel.repaint();
+                // System.out.println("upper left: (" + getZRect().getX() + ", " + getZRect().getY() + ")");
+                // System.out.println("lower left: (" + getZRect().getMinX() + ", " + getZRect().getMaxY() + ")");
                 // System.out.println("cartesian: (" + core.realIncrement() * getZRect().getMinX() + ", " + core.imaginaryIncrement() * getZRect().getMaxY() + ")");
-
-                
-
                 // System.out.println("cartesian: (" + xPoint + ", " + yPoint + ")");
 
             }

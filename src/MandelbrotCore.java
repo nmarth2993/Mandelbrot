@@ -51,6 +51,7 @@ public class MandelbrotCore {
     }
 
     public void calculatePoints(MouseHandler h) {
+        long startTime = System.currentTimeMillis();
         h.setWorking(true); //disable user input while calculating
         synchronized (pointList) {
             pointList = Collections.synchronizedList(new ArrayList<ColoredComplexCoordinate>());
@@ -95,6 +96,7 @@ public class MandelbrotCore {
             // wait until both threads have completed
         }
         h.setWorking(false); //allow user input again
+        System.out.println("elapsed time: " + (System.currentTimeMillis() - startTime) + "ms");
     }
 
     public ComplexCoordinate nextPoint(ComplexCoordinate z) {

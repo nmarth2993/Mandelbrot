@@ -11,7 +11,7 @@ public class MandelbrotGrapher {
     JFrame frame;
 
     public MandelbrotGrapher() {
-        frame = new JFrame();
+        frame = new JFrame("Mandelbrot");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         core = new MandelbrotCore(new ComplexCoordinate(-2, -1.5), 3, 3); // default
 

@@ -59,36 +59,43 @@ public class MouseHandler implements MouseInputListener {
                 working = false;
             }).start();
         }
-        //FIXME: this piece of code is confusing
-        else if (zRect == null || zRect.contains(e.getPoint())) {
-            if (e.getButton() == MouseEvent.BUTTON1) {
+        else if (e.getButton() == MouseEvent.BUTTON1) {
+            System.out.println("click at: (" + e.getX() + ", " + e.getY() + ")");
+            if (getZRect().contains(e.getPoint())) {
                 working = true;
-                // System.out.println("left click zooms in");
-                //zoom in by one factor about the center of the rectangle (the point clicked)
                 
                 //XXX: refactor to use zoom object
                 //FIXME: incorrectly zooming...
-                setZBox(zoomXY(e), zoomXRange(e), zoomYRange(e));
-                // System.out.println("xystart: " + core.xyStart().real() + ", " + core.xyStart().imaginary() + "\nxRange: " + core.xRange() + "\nyRange: " + core.yRange());
+                setZBox(new Zoom(zoomXY(e), zoomXRange(e), zoomYRange(e)));
+                // setZBox(zoomXY(e), zoomXRange(e), zoomYRange(e));
                 resetZRect();
                 new Thread(() -> {
                     synchronized(core) {
                         System.out.println("re-calculating...");
                         core.calculatePoints(this);
-                        //XXX: threaded
                     }
                     System.out.println("done");
                     working = false;
                 }).start();
             }
-        }
-        else {
-            setZRect(e.getPoint());
+            else {
+                setZRect(e.getPoint());
+                System.out.println("upper left: (" + getZRect().getX() + ", " + getZRect().getY() + ")");
+                System.out.println("lower left: (" + getZRect().getMinX() + ", " + getZRect().getMaxY() + ")");
+                // System.out.println("cartesian: (" + core.realIncrement() * getZRect().getMinX() + ", " + core.imaginaryIncrement() * getZRect().getMaxY() + ")");
+
+                
+
+                // System.out.println("cartesian: (" + xPoint + ", " + yPoint + ")");
+
+            }
         }
     }
 
     public ComplexCoordinate zoomXY(MouseEvent e) {
-        return new ComplexCoordinate(core.realIncrement() * (getZRect().getMinX()), core.imaginaryIncrement() * (getZRect().getMaxY()));
+        double xPoint = core.xyStart().real() + ((getZRect().getMinX() * core.xRange()) / MandelbrotCore.WIDTH);
+        double yPoint = core.xyStart().imaginary() + core.yRange() - ((getZRect().getMaxY() * core.yRange()) / MandelbrotCore.HEIGHT);
+        return new ComplexCoordinate(xPoint, yPoint);
     }
 
     public double zoomXRange(MouseEvent e) {
@@ -105,7 +112,7 @@ public class MouseHandler implements MouseInputListener {
     }
 
     public void setZRect(Point p) {
-        zRect = new Rectangle(p.x - WIDTH / 2, p.y - HEIGHT / 2, WIDTH, HEIGHT);
+        zRect = new Rectangle((int) (p.getX() - WIDTH / 2), (int) (p.getY() - HEIGHT / 2), WIDTH, HEIGHT);
     }
 
     public Rectangle getZRect() {

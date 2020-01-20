@@ -4,6 +4,9 @@ import java.util.List;
 
 public class MandelbrotCore {
 
+    //TODO: implement BigDecimal class to fix double precision errors:
+    //FIXME: double precision errors
+
     final static double WIDTH = 600; //resolution of the image
     final static double HEIGHT = 600;
 

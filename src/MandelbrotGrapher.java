@@ -5,10 +5,10 @@ import javax.swing.SwingUtilities;
 
 public class MandelbrotGrapher {
 
-    MandelbrotCore core;
-    MandelbrotPanel panel;
+    private MandelbrotCore core;
+    private MandelbrotPanel panel;
 
-    JFrame frame;
+    private JFrame frame;
 
     public MandelbrotGrapher() {
         frame = new JFrame("Mandelbrot");

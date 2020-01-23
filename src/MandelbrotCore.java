@@ -5,7 +5,6 @@ import java.util.List;
 public class MandelbrotCore {
 
     //TODO: implement BigDecimal class to fix double precision errors:
-    //FIXME: double precision errors
 
     final static double WIDTH = 600; //resolution of the image
     final static double HEIGHT = 600;
@@ -15,7 +14,7 @@ public class MandelbrotCore {
     final int max = 255; //max iterations to test if a point is in the set
 
     ComplexCoordinate xyStart; //bottom leftmost point in the graph
-    List<ColoredComplexCoordinate> pointList; //list of points to be plotted, includes all points in the field
+    List<ColoredComplex> pointList; //list of points to be plotted, includes all points in the field
 
     double xRange;
     double yRange;
@@ -26,7 +25,7 @@ public class MandelbrotCore {
         this.xyStart = xyStart;
         this.xRange = xRange;
         this.yRange = yRange;
-        pointList = Collections.synchronizedList(new ArrayList<ColoredComplexCoordinate>());
+        pointList = Collections.synchronizedList(new ArrayList<ColoredComplex>());
         //using a synchronized list to allow adding points from multiple threads
     }
 
@@ -46,7 +45,7 @@ public class MandelbrotCore {
         return xyStart;
     }
 
-    public List<ColoredComplexCoordinate> getPointList() {
+    public List<ColoredComplex> getPointList() {
         return pointList;
     }
 
@@ -54,22 +53,21 @@ public class MandelbrotCore {
         long startTime = System.currentTimeMillis();
         h.setWorking(true); //disable user input while calculating
         synchronized (pointList) {
-            pointList = Collections.synchronizedList(new ArrayList<ColoredComplexCoordinate>());
+            pointList = Collections.synchronizedList(new ArrayList<ColoredComplex>());
             //clear any previous points from the list
+            //note: this is faster than Collections.removeAll() [O(1) vs O(n)]
         }
         Thread t1; //scope thread outside of synchronized block
         Thread t2; //scope thread outside of synchronized block
         synchronized (pointList) { //must use synch block for synchronizedList
             t1 = new Thread(() -> {
+                //iterate over half of the field
                 for (ComplexCoordinate x = new ComplexCoordinate(xyStart().real(), xyStart().imaginary()); nextPoint(x)
                         .real() < (xyStart().real() + xRange() / 2); x = nextPoint(x)) {
                     int iter = ConvergenceTester.miter(x, max);
-                    ColoredComplexCoordinate c = new ColoredComplexCoordinate(x, iter);
-                    // ColoredComplexCoordinate c = new ColoredComplexCoordinate(x, ConvergenceTester.miterCol(x, max));
-                    if (c != null && c.getZ() != null) {
-                        pointList.add(c);
-                        // System.out.println("point added from thread 1");
-                    }
+                    ColoredComplex c = new ColoredComplex(x, iter);
+                    // ColoredComplex c = new ColoredComplex(x, ConvergenceTester.miterCol(x, max));
+                    pointList.add(c);
                     // System.out.println("next value of real: " + nextPoint(x).real());
                     // System.out.println("stop val: " + xyStart().real() + xRange() / 2);
                 }
@@ -79,15 +77,13 @@ public class MandelbrotCore {
 
         synchronized (pointList) {
             t2 = new Thread(() -> {
+                //iterate over the other half of the field
                 for (ComplexCoordinate x = new ComplexCoordinate(xyStart().real() + xRange() / 2,
                         xyStart().imaginary()); nextPoint(x) != null; x = nextPoint(x)) {
                     int iter = ConvergenceTester.miter(x, max);
-                    ColoredComplexCoordinate c = new ColoredComplexCoordinate(x, iter);
-                    // ColoredComplexCoordinate c = new ColoredComplexCoordinate(x, ConvergenceTester.miterCol(x, max));
-                    if (c != null && c.getZ() != null) {
-                        pointList.add(c);
-                        // System.out.println("point added from thread 2");
-                    }
+                    ColoredComplex c = new ColoredComplex(x, iter);
+                    // ColoredComplex c = new ColoredComplex(x, ConvergenceTester.miterCol(x, max));
+                    pointList.add(c);
                 }
                 System.out.println("thread 2 done.");
             });
@@ -126,13 +122,13 @@ public class MandelbrotCore {
     public double realIncrement() {
         return (xRange() / WIDTH) * (1 / DENSITY);
         // reciprocal of density constant
-        // because half density only does every 2 points
+        // because half density only plots every 2 points
     }
 
     public double imaginaryIncrement() {
         return (yRange() / HEIGHT) * (1 / DENSITY);
         // reciprocal of density constant
-        // because half density only does every 2 points
+        // because half density only plots every 2 points
     }
 
     public void setRealIncrement(double inc) {

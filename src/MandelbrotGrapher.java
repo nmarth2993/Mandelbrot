@@ -13,15 +13,7 @@ public class MandelbrotGrapher {
     public MandelbrotGrapher() {
         frame = new JFrame("Mandelbrot");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        core = new MandelbrotCore(new ComplexCoordinate(-2, -1.5), 3, 3); // default
-
-        // core = new MandelbrotCore(new ComplexCoordinate(-1.5, -.5), 1, 1);
-        // core = new MandelbrotCore(new ComplexCoordinate(-2.2, -1), 3, 2);
-        // core = new MandelbrotCore(new ComplexCoordinate(0, 0), 0.5, 0.5);
-        // core = new MandelbrotCore(new ComplexCoordinate(-1.5, -.5), 1, 1);
-
-        // core = new MandelbrotCore(new ComplexCoordinate(0.006666666666666667,
-        // 0.8033333333333333), .4, .4);
+        core = new MandelbrotCore(new ComplexCoordinate(-2, -1.5), 3, 3);
 
         panel = new MandelbrotPanel(core);
 
@@ -43,7 +35,8 @@ public class MandelbrotGrapher {
             }
         }).start();
 
-        new Thread(() -> { // point calculation needs to be in a thread
+        //plot the set
+        new Thread(() -> {
             synchronized (core) {
                 core.calculatePoints(panel.getMouseHandler());
             }

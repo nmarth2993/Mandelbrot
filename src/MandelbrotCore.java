@@ -6,20 +6,18 @@ public class MandelbrotCore {
 
     //TODO: implement BigDecimal class to fix double precision errors:
 
-    final static double WIDTH = 600; //resolution of the image
-    final static double HEIGHT = 600;
+    public final static double WIDTH = 600; //resolution of the image
+    public final static double HEIGHT = 600;
 
-    final static double DENSITY = 1; // density (decimal <= 1) where 1 == 100% density
+    public final static double DENSITY = 1; // density (decimal <= 1) where 1 == 100% density
 
-    final int max = 255; //max iterations to test if a point is in the set
+    public final int max = 255; //max iterations to test if a point is in the set
 
-    ComplexCoordinate xyStart; //bottom leftmost point in the graph
-    List<ColoredComplex> pointList; //list of points to be plotted, includes all points in the field
+    private ComplexCoordinate xyStart; //bottom leftmost point in the graph
+    private List<ColoredComplex> pointList; //list of points to be plotted, includes all points in the field
 
-    double xRange;
-    double yRange;
-    double realIncrement; //real increment such that each point corresponds to a single pixel
-    double imaginaryIncrement; //imaginary increment such that each point corresponds to a single pixel
+    private double xRange;
+    private double yRange;
 
     public MandelbrotCore(ComplexCoordinate xyStart, double xRange, double yRange) {
         this.xyStart = xyStart;
@@ -129,14 +127,6 @@ public class MandelbrotCore {
         return (yRange() / HEIGHT) * (1 / DENSITY);
         // reciprocal of density constant
         // because half density only plots every 2 points
-    }
-
-    public void setRealIncrement(double inc) {
-        realIncrement = inc;
-    }
-
-    public void setImaginaryIncrement(double inc) {
-        imaginaryIncrement = inc;
     }
 
 }

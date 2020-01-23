@@ -1,7 +1,7 @@
 import java.awt.Color;
 public class ColoredComplex extends ComplexCoordinate {
 
-    Color c;
+    private Color c;
 
     public ColoredComplex(double a, double b) {
         super(a, b);

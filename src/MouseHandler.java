@@ -12,11 +12,11 @@ public class MouseHandler implements MouseInputListener {
     final static int WIDTH = (int) (MandelbrotCore.WIDTH / 10);
     final static int HEIGHT = (int) (MandelbrotCore.HEIGHT / 10);
 
-    MandelbrotCore core;
-    MandelbrotPanel panel;
-    Rectangle zRect;
-    Stack<Zoom> previousZooms;
-    boolean working; //used to disable user input when plotting
+    private MandelbrotCore core;
+    private MandelbrotPanel panel;
+    private Rectangle zRect;
+    private Stack<Zoom> previousZooms;
+    private boolean working; //used to disable user input when plotting
 
     public MouseHandler(MandelbrotCore core, MandelbrotPanel panel) {
         working = false;

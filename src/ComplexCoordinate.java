@@ -1,7 +1,7 @@
 public class ComplexCoordinate {
 
-    double a;
-    double b;
+    private double a;
+    private double b;
 
     public ComplexCoordinate(double a, double b) {
         this.a = a;

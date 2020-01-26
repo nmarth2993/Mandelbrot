@@ -7,4 +7,5 @@ Instructions
 ------------
 
 Left click to set new zoom box and click again within the box to confirm
+
 Right click to return to previous zoom

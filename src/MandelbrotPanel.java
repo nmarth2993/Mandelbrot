@@ -31,123 +31,102 @@ public class MandelbrotPanel extends JPanel {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
 
-        if (core.isColorScaling()) {
-            synchronized (core.getPointList()) { // must access synchronized list in a synch block
-                int maxColorValue = core.maxColorValue();
-                if (!core.getPointList().isEmpty()) {
-                    for (ColoredComplex x : core.getPointList()) {
-                        int xPixel = (int) ((x.getZ().real() - core.xyStart().real())
-                                * (MandelbrotCore.WIDTH / core.xRange()));
-                        int yPixel = (int) ((core.xyStart().imaginary() + core.yRange() - x.getZ().imaginary())
-                                * (MandelbrotCore.HEIGHT / core.yRange()));
+        int colorMode = core.colorMode();
 
-                        Color scaledColor = new Color(maxColorValue - x.getColor().getRed(),
+        synchronized (core.getPointList()) {
+            if (!core.getPointList().isEmpty()) {
+                Color drawColor = null;
+                int maxColorValue = 0;
+                // scope colorMode outside of for loop so that we don't
+                // have an O(n^2) loop pointlessly and then spend 30 minutes
+                // trying to figure out how there's deadlock when there isn't
+                if (colorMode == MandelbrotCore.CMODE_INVERT) {
+                    maxColorValue = core.maxColorValue();
+                }
+                for (ColoredComplex x : core.getPointList()) {
+                    int xPixel = (int) ((x.getZ().real() - core.xyStart().real())
+                            * (MandelbrotCore.WIDTH / core.xRange()));
+                    int yPixel = (int) ((core.xyStart().imaginary() + core.yRange() - x.getZ().imaginary())
+                            * (MandelbrotCore.HEIGHT / core.yRange()));
+
+                    if (colorMode == MandelbrotCore.CMODE_BLACK_WHITE) {
+                        drawColor = x.getColor();
+                    } else if (colorMode == MandelbrotCore.CMODE_INVERT) {
+                        drawColor = new Color(maxColorValue - x.getColor().getRed(),
                                 maxColorValue - x.getColor().getRed(), maxColorValue - x.getColor().getRed());
-
-                        Color rgbcol;
+                    } else if (colorMode == MandelbrotCore.CMODE_RGB) {
                         if (x.getColor().getRed() < 85) {
-                            // draw red
-                            // rgbcol = Color.RED;
-                            rgbcol = new Color(255 - x.getColor().getRed(), 0, 0);
+                            drawColor = new Color(255 - x.getColor().getRed(), 0, 0);
                         } else if (x.getColor().getRed() < 170) {
-                            // draw green
-                            // rgbcol = Color.GREEN;
-                            rgbcol = new Color(0, 255 - x.getColor().getRed(), 0);
+                            drawColor = new Color(0, 255 - x.getColor().getRed(), 0);
                         } else {
-                            // draw blue
-                            // rgbcol = Color.BLUE;
-                            rgbcol = new Color(0, 0, 255 - x.getColor().getRed());
+                            drawColor = new Color(0, 0, 255 - x.getColor().getRed());
                         }
+                    }
 
-                        // g2d.setColor(scaledColor);
-                        g2d.setColor(rgbcol);
-                        g2d.drawLine(xPixel, yPixel, xPixel, yPixel);
-                    }
-                }
-
-                // drawing axes:
-                if (drawAxes) {
-                    if (core.xyStart().real() < 0 && core.xyStart().real() + core.xRange() > 0) {
-                        int yAxis = (int) (-core.xyStart().real() * (MandelbrotCore.WIDTH / core.xRange()));
-                        g2d.setColor(Color.GREEN);
-                        g2d.drawLine(yAxis, 0, yAxis, getHeight());
-                    }
-                    if (core.xyStart().imaginary() < 0 && core.xyStart().imaginary() + core.yRange() > 0) {
-                        int xAxis = (int) ((core.xyStart().imaginary() + core.yRange())
-                                * (MandelbrotCore.HEIGHT / core.yRange()));
-                        g2d.setColor(Color.GREEN);
-                        g2d.drawLine(0, xAxis, getWidth(), xAxis);
-                    }
-                }
-
-                // printing start and end points
-                if (diag) {
-                    if (!core.getPointList().isEmpty()) {
-                        ColoredComplex start = core.getPointList().get(0);
-                        ComplexCoordinate end = new ComplexCoordinate(core.xyStart().real() + core.xRange(),
-                                core.xyStart().imaginary() + core.yRange());
-                        g2d.setColor(Color.RED);
-                        g2d.drawString("start: " + start.getZ() + "  end: " + end.toString(), 0, 10);
-                    }
+                    g2d.setColor(drawColor);
+                    g2d.drawLine(xPixel, yPixel, xPixel, yPixel);
                 }
             }
-        } else {
 
-            synchronized (core.getPointList()) { // must access synchronized list in a synch block
+            // drawing axes:
+            if (drawAxes) {
+                if (core.xyStart().real() < 0 && core.xyStart().real() + core.xRange() > 0) {
+                    int yAxis = (int) (-core.xyStart().real() * (MandelbrotCore.WIDTH / core.xRange()));
+                    g2d.setColor(Color.GREEN);
+                    g.drawLine(yAxis, 0, yAxis, getHeight());
+                }
+                if (core.xyStart().imaginary() < 0 && core.xyStart().imaginary() + core.yRange() > 0) {
+                    int xAxis = (int) ((core.xyStart().imaginary() + core.yRange())
+                            * (MandelbrotCore.HEIGHT / core.yRange()));
+                    g2d.setColor(Color.GREEN);
+                    g.drawLine(0, xAxis, getWidth(), xAxis);
+                }
+            }
+
+            // printing start and end points
+            if (diag) {
                 if (!core.getPointList().isEmpty()) {
-                    for (ColoredComplex x : core.getPointList()) {
-                        int xPixel = (int) ((x.getZ().real() - core.xyStart().real())
-                                * (MandelbrotCore.WIDTH / core.xRange()));
-                        int yPixel = (int) ((core.xyStart().imaginary() + core.yRange() - x.getZ().imaginary())
-                                * (MandelbrotCore.HEIGHT / core.yRange()));
-
-                        Color rgbcol;
-                        if (x.getColor().getRed() < 85) {
-                            // draw red
-                            // rgbcol = Color.RED;
-                            rgbcol = new Color(255 - x.getColor().getRed(), 0, 0);
-                        } else if (x.getColor().getRed() < 170) {
-                            // draw green
-                            // rgbcol = Color.GREEN;
-                            rgbcol = new Color(0, 255 - x.getColor().getRed(), 0);
-                        } else {
-                            // draw blue
-                            // rgbcol = Color.BLUE;
-                            rgbcol = new Color(0, 0, 255 - x.getColor().getRed());
-                        }
-
-                        g2d.setColor(rgbcol);
-                        g.drawLine(xPixel, yPixel, xPixel, yPixel);
-                    }
-                }
-
-                // drawing axes:
-                if (drawAxes) {
-                    if (core.xyStart().real() < 0 && core.xyStart().real() + core.xRange() > 0) {
-                        int yAxis = (int) (-core.xyStart().real() * (MandelbrotCore.WIDTH / core.xRange()));
-                        g2d.setColor(Color.GREEN);
-                        g.drawLine(yAxis, 0, yAxis, getHeight());
-                    }
-                    if (core.xyStart().imaginary() < 0 && core.xyStart().imaginary() + core.yRange() > 0) {
-                        int xAxis = (int) ((core.xyStart().imaginary() + core.yRange())
-                                * (MandelbrotCore.HEIGHT / core.yRange()));
-                        g2d.setColor(Color.GREEN);
-                        g.drawLine(0, xAxis, getWidth(), xAxis);
-                    }
-                }
-
-                // printing start and end points
-                if (diag) {
-                    if (!core.getPointList().isEmpty()) {
-                        ColoredComplex start = core.getPointList().get(0);
-                        ComplexCoordinate end = new ComplexCoordinate(core.xyStart().real() + core.xRange(),
-                                core.xyStart().imaginary() + core.yRange());
-                        g2d.setColor(Color.RED);
-                        g2d.drawString("start: " + start.getZ() + "  end: " + end.toString(), 0, 10);
-                    }
+                    ColoredComplex start = core.getPointList().get(0);
+                    ComplexCoordinate end = new ComplexCoordinate(core.xyStart().real() + core.xRange(),
+                            core.xyStart().imaginary() + core.yRange());
+                    g2d.setColor(Color.RED);
+                    g2d.drawString("start: " + start.getZ() + " end: " + end.toString(), 0, 10);
                 }
             }
         }
+
+        // the code below is previous code:
+        // synchronized (core.getPointList()) {
+        // if (!core.getPointList().isEmpty()) {
+        // for (ColoredComplex x : core.getPointList()) {
+        // int xPixel = (int) ((x.getZ().real() - core.xyStart().real())
+        // * (MandelbrotCore.WIDTH / core.xRange()));
+        // int yPixel = (int) ((core.xyStart().imaginary() + core.yRange() -
+        // x.getZ().imaginary())
+        // * (MandelbrotCore.HEIGHT / core.yRange()));
+
+        // Color rgbcol;
+        // if (x.getColor().getRed() < 85) {
+        // // draw red
+        // // rgbcol = Color.RED;
+        // rgbcol = new Color(255 - x.getColor().getRed(), 0, 0);
+        // } else if (x.getColor().getRed() < 170) {
+        // // draw green
+        // // rgbcol = Color.GREEN;
+        // rgbcol = new Color(0, 255 - x.getColor().getRed(), 0);
+        // } else {
+        // // draw blue
+        // // rgbcol = Color.BLUE;
+        // rgbcol = new Color(0, 0, 255 - x.getColor().getRed());
+        // }
+
+        // g2d.setColor(rgbcol);
+        // g.drawLine(xPixel, yPixel, xPixel, yPixel);
+        // }
+        // }
+        // }
+
         // drawing user zoom box
         g2d.setColor(Color.YELLOW);
         g2d.setStroke(new BasicStroke(3f));

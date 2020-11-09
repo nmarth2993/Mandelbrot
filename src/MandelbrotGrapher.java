@@ -17,6 +17,8 @@ public class MandelbrotGrapher {
 
         panel = new MandelbrotPanel(core);
 
+        frame.addKeyListener(new KeyListen(core));
+
         frame.setContentPane(panel);
 
         // set size of panel:
@@ -35,7 +37,7 @@ public class MandelbrotGrapher {
             }
         }).start();
 
-        //plot the set
+        // plot the set
         new Thread(() -> {
             synchronized (core) {
                 core.calculatePoints(panel.getMouseHandler());

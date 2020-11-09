@@ -19,11 +19,14 @@ public class MandelbrotCore {
     private double xRange;
     private double yRange;
 
+    private boolean scaleColor;
+
     public MandelbrotCore(ComplexCoordinate xyStart, double xRange, double yRange) {
         this.xyStart = xyStart;
         this.xRange = xRange;
         this.yRange = yRange;
         pointList = Collections.synchronizedList(new ArrayList<ColoredComplex>());
+        scaleColor = false;
         // using a synchronized list to allow adding points from multiple threads
     }
 
@@ -106,6 +109,26 @@ public class MandelbrotCore {
         } else {
             return new ComplexCoordinate(z.real(), z.imaginary() + imaginaryIncrement());
             // the next point is on the same line, no need to shift
+        }
+    }
+
+    public boolean isColorScaling() {
+        return scaleColor;
+    }
+
+    public void setColorScaling(boolean scale) {
+        scaleColor = scale;
+    }
+
+    public int maxColorValue() {
+        synchronized (pointList) {
+            int maxColor = 0;
+            for (ColoredComplex z : pointList) {
+                if (z.getColor().getRed() > maxColor) {
+                    maxColor = z.getColor().getRed();
+                }
+            }
+            return maxColor;
         }
     }
 

@@ -1,7 +1,7 @@
 Julia
 =====
 
-A julia set plotter
+A Julia Set plotter
 
 This set is defined as f(x) = z^3 - c
 
@@ -19,3 +19,8 @@ Right click to return to previous zoom
 Press 's' or space to cycle color modes.
 
 Current color modes are Black and White, Inverted, and RGB
+
+Images
+------
+
+Images of the Julia Set can be found on link:https://swe.umbc.edu/~nmarthi1/[this website]

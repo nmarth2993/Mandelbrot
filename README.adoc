@@ -3,6 +3,10 @@ Mandelbrot
 
 A mandelbrot set plotter
 
+Pressing 's' or space will cycle color modes
+
+Current modes are Black and White, Inverted, and RGB
+
 Note: subject to double precision errors
 
 Instructions

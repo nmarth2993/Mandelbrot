@@ -20,4 +20,6 @@ Right click to return to previous zoom
 See also
 --------
 
-link:https://github.com/nmarth2993/Mandelbrot/tree/julia[Julia set plot]
+link:https://github.com/nmarth2993/Mandelbrot/tree/julia[Julia Set Plot]
+
+link:https://swe.umbc.edu/~nmarthi1/[Julia Set Images]

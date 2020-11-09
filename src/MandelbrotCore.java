@@ -9,6 +9,12 @@ public class MandelbrotCore {
     public final static double WIDTH = 1000; // resolution of the image
     public final static double HEIGHT = 1000; // should be a square
 
+    public final static int CMODE_BLACK_WHITE = 1;
+    public final static int CMODE_INVERT = 2;
+    public final static int CMODE_RGB = 3;
+
+    public final static int NUM_COLORS = 3;
+
     public final static double DENSITY = 1; // density (decimal <= 1) where 1 == 100% density
 
     public final int max = 255; // max iterations to test if a point is in the set
@@ -19,14 +25,14 @@ public class MandelbrotCore {
     private double xRange;
     private double yRange;
 
-    private boolean scaleColor;
+    private int colorMode;
 
     public MandelbrotCore(ComplexCoordinate xyStart, double xRange, double yRange) {
         this.xyStart = xyStart;
         this.xRange = xRange;
         this.yRange = yRange;
         pointList = Collections.synchronizedList(new ArrayList<ColoredComplex>());
-        scaleColor = false;
+        colorMode = 1;
         // using a synchronized list to allow adding points from multiple threads
     }
 
@@ -112,12 +118,15 @@ public class MandelbrotCore {
         }
     }
 
-    public boolean isColorScaling() {
-        return scaleColor;
+    public int colorMode() {
+        return colorMode;
     }
 
-    public void setColorScaling(boolean scale) {
-        scaleColor = scale;
+    public void nextColorMode() {
+        colorMode++;
+        if (colorMode > NUM_COLORS) {
+            colorMode = 1;
+        }
     }
 
     public int maxColorValue() {

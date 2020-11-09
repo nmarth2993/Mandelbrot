@@ -16,7 +16,7 @@ public class ComplexCoordinate {
         return b;
     }
 
-    public double mod() { //distance from zero
+    public double mod() { // distance from zero
         return Math.hypot(real(), imaginary());
     }
 
@@ -24,21 +24,35 @@ public class ComplexCoordinate {
         return new ComplexCoordinate(real() + c.real(), imaginary() + c.imaginary());
     }
 
+    public ComplexCoordinate minus(ComplexCoordinate c) {
+        return new ComplexCoordinate(real() - c.real(), imaginary() - c.imaginary());
+    }
+
     public ComplexCoordinate multiply(ComplexCoordinate c) {
-        //FOIL
-        return new ComplexCoordinate(real() * c.real() - (imaginary() * c.imaginary()), real() * c.imaginary() + c.real() * imaginary());
+        // FOIL
+        return new ComplexCoordinate(real() * c.real() - (imaginary() * c.imaginary()),
+                real() * c.imaginary() + c.real() * imaginary());
     }
 
     public ComplexCoordinate square() {
         return this.multiply(this);
     }
 
+    public ComplexCoordinate cube() {
+        return this.multiply(this.square());
+    }
+
+    public ComplexCoordinate power4() {
+        return this.multiply(this.square());
+    }
+
     public String toString() {
         if (real() == 0 && imaginary() == 0) {
             return "" + 0;
         }
-        return (real() != 0 ? real() : "") + (imaginary() > 0 && real() != 0 ? "+" : "") + (imaginary() != 0 ? (imaginary() + "i") : "");
-        //if either term is 0, no need to print
-        //if b is negative, don't print the + sign
+        return (real() != 0 ? real() : "") + (imaginary() > 0 && real() != 0 ? "+" : "")
+                + (imaginary() != 0 ? (imaginary() + "i") : "");
+        // if either term is 0, no need to print
+        // if b is negative, don't print the + sign
     }
 }

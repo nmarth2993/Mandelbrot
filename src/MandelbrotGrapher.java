@@ -11,9 +11,11 @@ public class MandelbrotGrapher {
     private JFrame frame;
 
     public MandelbrotGrapher() {
-        frame = new JFrame("Mandelbrot");
+        frame = new JFrame("Julia Set");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         core = new MandelbrotCore(new ComplexCoordinate(-2, -1.5), 3, 3);
+
+        frame.addKeyListener(new KeyListen(core));
 
         panel = new MandelbrotPanel(core);
 
@@ -35,7 +37,7 @@ public class MandelbrotGrapher {
             }
         }).start();
 
-        //plot the set
+        // plot the set
         new Thread(() -> {
             synchronized (core) {
                 core.calculatePoints(panel.getMouseHandler());

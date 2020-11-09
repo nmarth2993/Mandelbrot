@@ -9,7 +9,9 @@ public class ConvergenceTester {
             if (z.mod() > 2.0) {
                 return i;
             }
-            z = z.square().plus(z0);
+            // z = z.square().plus(z0);
+            // z = z.cube().plus(z0);
+            z = z.power4().minus(z0);
 
         }
         return max;

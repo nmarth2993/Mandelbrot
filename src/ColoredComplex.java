@@ -1,4 +1,5 @@
 import java.awt.Color;
+
 public class ColoredComplex extends ComplexCoordinate {
 
     private Color c;
@@ -6,7 +7,7 @@ public class ColoredComplex extends ComplexCoordinate {
     public ColoredComplex(double a, double b) {
         super(a, b);
     }
-    
+
     public ColoredComplex(ComplexCoordinate z, int col) {
         super(z.real(), z.imaginary());
         setCol(col);

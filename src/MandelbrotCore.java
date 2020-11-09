@@ -97,8 +97,11 @@ public class MandelbrotCore {
         }
         t1.start();
         t2.start();
-        while (t1.isAlive() || t2.isAlive()) {
-            // wait until both threads have completed
+        try {
+            t1.join();
+            t2.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         h.setWorking(false); // allow user input again
         System.out.println("elapsed time: " + (System.currentTimeMillis() - startTime) + "ms");
@@ -160,5 +163,13 @@ public class MandelbrotCore {
         // reciprocal of density constant
         // because half density only plots every 2 points
     }
+
+    // public void resetZoom() {
+    // setXYStart(new ComplexCoordinate(-2, -1.5));
+    // setXRange(3);
+    // setYRange(3);
+    // calculatePoints(handler);
+    // need a way to re-calculate the points if I want to use this method
+    // }
 
 }

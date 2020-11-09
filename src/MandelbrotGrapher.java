@@ -17,7 +17,7 @@ public class MandelbrotGrapher {
 
         panel = new MandelbrotPanel(core);
 
-        frame.addKeyListener(new KeyListen(core));
+        frame.addKeyListener(new KeyListen(core, panel.handler));
 
         frame.setContentPane(panel);
 

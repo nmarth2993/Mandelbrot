@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MandelbrotCore {
+public class JuliaCore {
 
     // TODO: implement BigDecimal class to fix double precision errors:
 
@@ -27,7 +27,7 @@ public class MandelbrotCore {
 
     private int colorMode;
 
-    public MandelbrotCore(ComplexCoordinate xyStart, double xRange, double yRange) {
+    public JuliaCore(ComplexCoordinate xyStart, double xRange, double yRange) {
         this.xyStart = xyStart;
         this.xRange = xRange;
         this.yRange = yRange;

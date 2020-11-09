@@ -3,26 +3,26 @@ import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-public class MandelbrotGrapher {
+public class JuliaGrapher {
 
-    private MandelbrotCore core;
-    private MandelbrotPanel panel;
+    private JuliaCore core;
+    private JuliaPanel panel;
 
     private JFrame frame;
 
-    public MandelbrotGrapher() {
+    public JuliaGrapher() {
         frame = new JFrame("Julia Set");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        core = new MandelbrotCore(new ComplexCoordinate(-2, -1.5), 3, 3);
+        core = new JuliaCore(new ComplexCoordinate(-2, -1.5), 3, 3);
 
         frame.addKeyListener(new KeyListen(core));
 
-        panel = new MandelbrotPanel(core);
+        panel = new JuliaPanel(core);
 
         frame.setContentPane(panel);
 
         // set size of panel:
-        panel.setPreferredSize(new Dimension((int) MandelbrotCore.WIDTH, (int) MandelbrotCore.HEIGHT));
+        panel.setPreferredSize(new Dimension((int) JuliaCore.WIDTH, (int) JuliaCore.HEIGHT));
         frame.setVisible(true);
         frame.pack();
 
@@ -45,13 +45,13 @@ public class MandelbrotGrapher {
         }).start();
     }
 
-    public MandelbrotCore getCore() {
+    public JuliaCore getCore() {
         return core;
     }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new MandelbrotGrapher();
+            new JuliaGrapher();
         });
     }
 }

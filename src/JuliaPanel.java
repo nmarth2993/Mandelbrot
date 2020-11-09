@@ -5,7 +5,7 @@ import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
 
-public class MandelbrotPanel extends JPanel {
+public class JuliaPanel extends JPanel {
     /**
      *
      */
@@ -14,11 +14,11 @@ public class MandelbrotPanel extends JPanel {
     final static boolean drawAxes = false;
     final static boolean diag = false;
 
-    MandelbrotCore core;
+    JuliaCore core;
     MouseHandler handler;
     KeyListen keyListen;
 
-    public MandelbrotPanel(MandelbrotCore core) {
+    public JuliaPanel(JuliaCore core) {
         this.core = core;
         handler = new MouseHandler(core, this);
         addMouseListener(handler);
@@ -41,21 +41,20 @@ public class MandelbrotPanel extends JPanel {
                 // scope colorMode outside of for loop so that we don't
                 // have an O(n^2) loop pointlessly and then spend 30 minutes
                 // trying to figure out how there's deadlock when there isn't
-                if (colorMode == MandelbrotCore.CMODE_INVERT) {
+                if (colorMode == JuliaCore.CMODE_INVERT) {
                     maxColorValue = core.maxColorValue();
                 }
                 for (ColoredComplex x : core.getPointList()) {
-                    int xPixel = (int) ((x.getZ().real() - core.xyStart().real())
-                            * (MandelbrotCore.WIDTH / core.xRange()));
+                    int xPixel = (int) ((x.getZ().real() - core.xyStart().real()) * (JuliaCore.WIDTH / core.xRange()));
                     int yPixel = (int) ((core.xyStart().imaginary() + core.yRange() - x.getZ().imaginary())
-                            * (MandelbrotCore.HEIGHT / core.yRange()));
+                            * (JuliaCore.HEIGHT / core.yRange()));
 
-                    if (colorMode == MandelbrotCore.CMODE_BLACK_WHITE) {
+                    if (colorMode == JuliaCore.CMODE_BLACK_WHITE) {
                         drawColor = x.getColor();
-                    } else if (colorMode == MandelbrotCore.CMODE_INVERT) {
+                    } else if (colorMode == JuliaCore.CMODE_INVERT) {
                         drawColor = new Color(maxColorValue - x.getColor().getRed(),
                                 maxColorValue - x.getColor().getRed(), maxColorValue - x.getColor().getRed());
-                    } else if (colorMode == MandelbrotCore.CMODE_RGB) {
+                    } else if (colorMode == JuliaCore.CMODE_RGB) {
                         if (x.getColor().getRed() < 85) {
                             drawColor = new Color(255 - x.getColor().getRed(), 0, 0);
                         } else if (x.getColor().getRed() < 170) {
@@ -73,13 +72,13 @@ public class MandelbrotPanel extends JPanel {
             // drawing axes:
             if (drawAxes) {
                 if (core.xyStart().real() < 0 && core.xyStart().real() + core.xRange() > 0) {
-                    int yAxis = (int) (-core.xyStart().real() * (MandelbrotCore.WIDTH / core.xRange()));
+                    int yAxis = (int) (-core.xyStart().real() * (JuliaCore.WIDTH / core.xRange()));
                     g2d.setColor(Color.GREEN);
                     g.drawLine(yAxis, 0, yAxis, getHeight());
                 }
                 if (core.xyStart().imaginary() < 0 && core.xyStart().imaginary() + core.yRange() > 0) {
                     int xAxis = (int) ((core.xyStart().imaginary() + core.yRange())
-                            * (MandelbrotCore.HEIGHT / core.yRange()));
+                            * (JuliaCore.HEIGHT / core.yRange()));
                     g2d.setColor(Color.GREEN);
                     g.drawLine(0, xAxis, getWidth(), xAxis);
                 }

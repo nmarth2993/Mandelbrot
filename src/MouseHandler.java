@@ -7,18 +7,18 @@ import javax.swing.event.MouseInputListener;
 
 public class MouseHandler implements MouseInputListener {
 
-    //width and height of rectangle for zooming
-    //a higher divisor will cause a more agressive zoom
-    final static int WIDTH = (int) (MandelbrotCore.WIDTH / 10);
-    final static int HEIGHT = (int) (MandelbrotCore.HEIGHT / 10);
+    // width and height of rectangle for zooming
+    // a higher divisor will cause a more agressive zoom
+    final static int WIDTH = (int) (JuliaCore.WIDTH / 10);
+    final static int HEIGHT = (int) (JuliaCore.HEIGHT / 10);
 
-    private MandelbrotCore core;
-    private MandelbrotPanel panel;
+    private JuliaCore core;
+    private JuliaPanel panel;
     private Rectangle zRect;
     private Stack<Zoom> previousZooms;
-    private boolean working; //used to disable user input when plotting
+    private boolean working; // used to disable user input when plotting
 
-    public MouseHandler(MandelbrotCore core, MandelbrotPanel panel) {
+    public MouseHandler(JuliaCore core, JuliaPanel panel) {
         working = false;
         this.core = core;
         this.panel = panel;
@@ -36,14 +36,14 @@ public class MouseHandler implements MouseInputListener {
         if (working) {
             return;
         }
-        if (e.getButton() == MouseEvent.BUTTON3) { //right click zooms out
-            working = true; //ignore user input until plotted
+        if (e.getButton() == MouseEvent.BUTTON3) { // right click zooms out
+            working = true; // ignore user input until plotted
 
             new Thread(() -> {
                 synchronized (core) {
                     if (previousZooms.size() > 1) {
                         previousZooms.pop();
-                        //removes current zoom level to make previous zoom top of stack
+                        // removes current zoom level to make previous zoom top of stack
                     }
                     setZBox(previousZooms.peek());
 
@@ -51,12 +51,12 @@ public class MouseHandler implements MouseInputListener {
                     panel.repaint();
                     core.calculatePoints(this);
                 }
-                working = false; //allow user input again
+                working = false; // allow user input again
             }).start();
         } else if (e.getButton() == MouseEvent.BUTTON1) {
             if (getZRect().contains(e.getPoint())) {
-                working = true; //ignore user input until plotted
-                
+                working = true; // ignore user input until plotted
+
                 new Thread(() -> {
                     synchronized (core) {
                         Zoom z = new Zoom(zoomXY(e), zoomXRange(e), zoomYRange(e));
@@ -67,7 +67,7 @@ public class MouseHandler implements MouseInputListener {
                         panel.repaint();
                         core.calculatePoints(this);
                     }
-                    working = false; //allow user input again
+                    working = false; // allow user input again
                 }).start();
             } else {
                 setZRect(e.getPoint());
@@ -76,11 +76,11 @@ public class MouseHandler implements MouseInputListener {
         }
     }
 
-    //zoomXY: finds the cartesian xyStart given an x/y pixel
+    // zoomXY: finds the cartesian xyStart given an x/y pixel
     public ComplexCoordinate zoomXY(MouseEvent e) {
-        double xPoint = core.xyStart().real() + ((getZRect().getMinX() * core.xRange()) / MandelbrotCore.WIDTH);
+        double xPoint = core.xyStart().real() + ((getZRect().getMinX() * core.xRange()) / JuliaCore.WIDTH);
         double yPoint = core.xyStart().imaginary() + core.yRange()
-                - ((getZRect().getMaxY() * core.yRange()) / MandelbrotCore.HEIGHT);
+                - ((getZRect().getMaxY() * core.yRange()) / JuliaCore.HEIGHT);
         return new ComplexCoordinate(xPoint, yPoint);
     }
 
@@ -97,7 +97,7 @@ public class MouseHandler implements MouseInputListener {
     }
 
     public void setZRect(Point p) {
-        //sets the rectangle centered around the click
+        // sets the rectangle centered around the click
         zRect = new Rectangle((int) (p.getX() - WIDTH / 2), (int) (p.getY() - HEIGHT / 2), WIDTH, HEIGHT);
     }
 
@@ -141,8 +141,8 @@ public class MouseHandler implements MouseInputListener {
 
     }
 
-    //Zoom is just a wrapper class to package the three attributes into
-    //one object for ease of use in a stack
+    // Zoom is just a wrapper class to package the three attributes into
+    // one object for ease of use in a stack
     class Zoom {
         ComplexCoordinate xyStart;
         double xRange;

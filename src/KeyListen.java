@@ -3,9 +3,9 @@ import java.awt.event.*;
 
 public class KeyListen implements KeyListener {
 
-    MandelbrotCore core;
+    JuliaCore core;
 
-    public KeyListen(MandelbrotCore core) {
+    public KeyListen(JuliaCore core) {
         this.core = core;
     }
 

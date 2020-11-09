@@ -2,6 +2,7 @@ Mandelbrot
 ==========
 
 A mandelbrot set plotter
+
 Note: subject to double precision errors
 
 Instructions

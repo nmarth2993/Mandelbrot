@@ -38,7 +38,22 @@ public class MandelbrotPanel extends JPanel {
                     int yPixel = (int) ((core.xyStart().imaginary() + core.yRange() - x.getZ().imaginary())
                             * (MandelbrotCore.HEIGHT / core.yRange()));
 
-                    g2d.setColor(x.getColor());
+                    Color rgbcol;
+                    if (x.getColor().getRed() < 85) {
+                        // draw red
+                        // rgbcol = Color.RED;
+                        rgbcol = new Color(255 - x.getColor().getRed(), 0, 0);
+                    } else if (x.getColor().getRed() < 170) {
+                        // draw green
+                        // rgbcol = Color.GREEN;
+                        rgbcol = new Color(0, 255 - x.getColor().getRed(), 0);
+                    } else {
+                        // draw blue
+                        // rgbcol = Color.BLUE;
+                        rgbcol = new Color(0, 0, 255 - x.getColor().getRed());
+                    }
+
+                    g2d.setColor(rgbcol);
                     g.drawLine(xPixel, yPixel, xPixel, yPixel);
                 }
             }

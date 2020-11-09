@@ -4,17 +4,17 @@ import java.util.List;
 
 public class MandelbrotCore {
 
-    //TODO: implement BigDecimal class to fix double precision errors:
+    // TODO: implement BigDecimal class to fix double precision errors:
 
-    public final static double WIDTH = 600; //resolution of the image
-    public final static double HEIGHT = 600;
+    public final static double WIDTH = 1000; // resolution of the image
+    public final static double HEIGHT = 1000;
 
     public final static double DENSITY = 1; // density (decimal <= 1) where 1 == 100% density
 
-    public final int max = 255; //max iterations to test if a point is in the set
+    public final int max = 255; // max iterations to test if a point is in the set
 
-    private ComplexCoordinate xyStart; //bottom leftmost point in the graph
-    private List<ColoredComplex> pointList; //list of points to be plotted, includes all points in the field
+    private ComplexCoordinate xyStart; // bottom leftmost point in the graph
+    private List<ColoredComplex> pointList; // list of points to be plotted, includes all points in the field
 
     private double xRange;
     private double yRange;
@@ -24,7 +24,7 @@ public class MandelbrotCore {
         this.xRange = xRange;
         this.yRange = yRange;
         pointList = Collections.synchronizedList(new ArrayList<ColoredComplex>());
-        //using a synchronized list to allow adding points from multiple threads
+        // using a synchronized list to allow adding points from multiple threads
     }
 
     public void setXYStart(ComplexCoordinate xyS) {
@@ -49,17 +49,17 @@ public class MandelbrotCore {
 
     public void calculatePoints(MouseHandler h) {
         long startTime = System.currentTimeMillis();
-        h.setWorking(true); //disable user input while calculating
+        h.setWorking(true); // disable user input while calculating
         synchronized (pointList) {
             pointList = Collections.synchronizedList(new ArrayList<ColoredComplex>());
-            //clear any previous points from the list
-            //note: this is faster than Collections.removeAll() [O(1) vs O(n)]
+            // clear any previous points from the list
+            // note: this is faster than Collections.removeAll() [O(1) vs O(n)]
         }
-        Thread t1; //scope thread outside of synchronized block
-        Thread t2; //scope thread outside of synchronized block
-        synchronized (pointList) { //must use synch block for synchronizedList
+        Thread t1; // scope thread outside of synchronized block
+        Thread t2; // scope thread outside of synchronized block
+        synchronized (pointList) { // must use synch block for synchronizedList
             t1 = new Thread(() -> {
-                //iterate over half of the field
+                // iterate over half of the field
                 for (ComplexCoordinate x = new ComplexCoordinate(xyStart().real(), xyStart().imaginary()); nextPoint(x)
                         .real() < (xyStart().real() + xRange() / 2); x = nextPoint(x)) {
                     int iter = ConvergenceTester.miter(x, max);
@@ -75,7 +75,7 @@ public class MandelbrotCore {
 
         synchronized (pointList) {
             t2 = new Thread(() -> {
-                //iterate over the other half of the field
+                // iterate over the other half of the field
                 for (ComplexCoordinate x = new ComplexCoordinate(xyStart().real() + xRange() / 2,
                         xyStart().imaginary()); nextPoint(x) != null; x = nextPoint(x)) {
                     int iter = ConvergenceTester.miter(x, max);
@@ -91,7 +91,7 @@ public class MandelbrotCore {
         while (t1.isAlive() || t2.isAlive()) {
             // wait until both threads have completed
         }
-        h.setWorking(false); //allow user input again
+        h.setWorking(false); // allow user input again
         System.out.println("elapsed time: " + (System.currentTimeMillis() - startTime) + "ms");
     }
 

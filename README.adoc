@@ -13,7 +13,8 @@ Left click to set new zoom box and click again within the box to confirm
 
 Right click to return to previous zoom
 
-Press 's' or space to cycle color modes.
+Press space to cycle color modes.
+
 
 Current color modes are Black and White, Inverted, and RGB
 

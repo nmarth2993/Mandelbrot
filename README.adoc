@@ -3,9 +3,6 @@ Julia
 
 A Julia Set plotter
 
-This set is defined as f(x) = z^3 - c
-
-
 Note: subject to double precision errors
 
 Instructions

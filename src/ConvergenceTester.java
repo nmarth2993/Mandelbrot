@@ -19,8 +19,8 @@ public class ConvergenceTester {
         // z0 = new ComplexCoordinate(.37, .1);
         // z0 = new ComplexCoordinate(.355, .355);
 
-        // z0 = new ComplexCoordinate(.355534, -.337292);
-        z0 = new ComplexCoordinate(-0.202420806884766, 0.39527333577474);
+        z0 = new ComplexCoordinate(.355534, -.337292);
+        // z0 = new ComplexCoordinate(-0.202420806884766, 0.39527333577474);
 
         for (int i = 0; i < max; i++) {
             if (z.mod() > 2.0) {

@@ -6,8 +6,8 @@ public class JuliaCore {
 
     // TODO: implement BigDecimal class to fix double precision errors:
 
-    public final static double WIDTH = 900; // resolution of the image
-    public final static double HEIGHT = 900; // should be a square
+    public final static double WIDTH = 903; // resolution of the image
+    public final static double HEIGHT = 903; // should be a square
 
     public final static int CMODE_BLACK_WHITE = 1;
     public final static int CMODE_INVERT = 2;

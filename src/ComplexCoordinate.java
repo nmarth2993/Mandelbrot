@@ -38,12 +38,12 @@ public class ComplexCoordinate {
         return this.multiply(this);
     }
 
-    public ComplexCoordinate cube() {
-        return this.multiply(this.square());
-    }
-
-    public ComplexCoordinate power4() {
-        return this.multiply(this.square());
+    public ComplexCoordinate power(int power) {
+        if (power == 1) {
+            return this;
+        } else {
+            return this.multiply(power(power - 1));
+        }
     }
 
     public String toString() {

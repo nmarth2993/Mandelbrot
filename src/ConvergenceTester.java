@@ -4,6 +4,8 @@ public class ConvergenceTester {
 
     public static int miter(ComplexCoordinate z0, int max) {
         ComplexCoordinate z = z0;
+        // z0 = new ComplexCoordinate(-.8, .156);
+        z0 = new ComplexCoordinate(.285, .01);
 
         for (int i = 0; i < max; i++) {
             if (z.mod() > 2.0) {
@@ -11,7 +13,7 @@ public class ConvergenceTester {
             }
             // z = z.square().plus(z0);
             // z = z.cube().plus(z0);
-            z = z.power4().minus(z0);
+            z = z.square().plus(z0);
 
         }
         return max;

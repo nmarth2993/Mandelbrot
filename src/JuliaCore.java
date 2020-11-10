@@ -6,8 +6,8 @@ public class JuliaCore {
 
     // TODO: implement BigDecimal class to fix double precision errors:
 
-    public final static double WIDTH = 1000; // resolution of the image
-    public final static double HEIGHT = 1000; // should be a square
+    public final static double WIDTH = 900; // resolution of the image
+    public final static double HEIGHT = 900; // should be a square
 
     public final static int CMODE_BLACK_WHITE = 1;
     public final static int CMODE_INVERT = 2;
@@ -69,8 +69,9 @@ public class JuliaCore {
         synchronized (pointList) { // must use synch block for synchronizedList
             t1 = new Thread(() -> {
                 // iterate over half of the field
+
                 for (ComplexCoordinate x = new ComplexCoordinate(xyStart().real(), xyStart().imaginary()); nextPoint(x)
-                        .real() < (xyStart().real() + xRange() / 2); x = nextPoint(x)) {
+                        .real() < (xyStart().real() + xRange() / 2d) + realIncrement(); x = nextPoint(x)) {
                     int iter = ConvergenceTester.miter(x, max);
                     ColoredComplex c = new ColoredComplex(x, iter);
                     // ColoredComplex c = new ColoredComplex(x, ConvergenceTester.miterCol(x, max));

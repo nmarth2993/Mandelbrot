@@ -2,6 +2,7 @@
 
 A Mandelbrot set plotter
 
+![mandelbrotgif](https://user-images.githubusercontent.com/35354196/130556692-407411de-2394-42cd-ae1e-687247403b59.gif)
 
 ## Instructions
 

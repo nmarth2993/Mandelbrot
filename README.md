@@ -4,10 +4,14 @@ A Mandelbrot set plotter
 
 ![mandelbrotgif](https://user-images.githubusercontent.com/35354196/130556692-407411de-2394-42cd-ae1e-687247403b59.gif)
 
+## Installation
+
+Simply download Mandelbrot.jar and run the file.
+
+
 ## Instructions
 
-Left click to set new zoom box. Click again within the box to confim the new zoom
-
+Left click to set new zoom box, click again within the box to confim the new zoom.
 Right click once to return to previous zoom
 
 Pressing **c** or space will cycle color modes

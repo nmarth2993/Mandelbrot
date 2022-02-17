@@ -27,12 +27,15 @@ public class JuliaCore {
 
     private int colorMode;
 
+    private boolean overlay;
+
     public JuliaCore(ComplexCoordinate xyStart, double xRange, double yRange) {
         this.xyStart = xyStart;
         this.xRange = xRange;
         this.yRange = yRange;
         pointList = Collections.synchronizedList(new ArrayList<ColoredComplex>());
         colorMode = 1;
+        overlay = false;
         // using a synchronized list to allow adding points from multiple threads
     }
 
@@ -165,6 +168,14 @@ public class JuliaCore {
         return (yRange() / HEIGHT) * (1 / DENSITY);
         // reciprocal of density constant
         // because half density only plots every 2 points
+    }
+
+    public boolean isOverlay() {
+        return overlay;
+    }
+
+    public void setOverlay(boolean overlay) {
+        this.overlay = overlay;
     }
 
 }

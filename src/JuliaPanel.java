@@ -1,5 +1,6 @@
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
@@ -13,6 +14,11 @@ public class JuliaPanel extends JPanel {
 
     final static boolean drawAxes = false;
     final static boolean diag = false;
+
+    public static final double GRID_SIZE = 4; // number of gridlines per row/col (makes n * n distinct squares)
+    public static final int GRID_TEXT_ALIGN_X = 15; // x offset for the labels of the gridlines
+    public static final int GRID_TEXT_ALIGN_Y = 30; // y offset for the labels of the gridlines
+    public static final int GRID_FONT_SIZE = 30;
 
     JuliaCore core;
     MouseHandler handler;
@@ -33,6 +39,7 @@ public class JuliaPanel extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
 
         int colorMode = core.colorMode();
+        boolean overlay = core.isOverlay();
 
         synchronized (core.getPointList()) {
             if (!core.getPointList().isEmpty()) {
@@ -84,6 +91,31 @@ public class JuliaPanel extends JPanel {
                             * (JuliaCore.HEIGHT / core.yRange()));
                     g2d.setColor(Color.GREEN);
                     g.drawLine(0, xAxis, getWidth(), xAxis);
+                }
+            }
+
+            // drawing grid overlay
+            if (overlay) {
+
+                g2d.setColor(Color.GREEN);
+
+                // first draw lines
+                for (int i = 0; i < GRID_SIZE - 1; i++) {
+                    g2d.drawLine((int) (((i + 1) / GRID_SIZE) * getWidth()), 0,
+                            (int) (((i + 1) / GRID_SIZE) * getWidth()), getHeight());
+                    g2d.drawLine(0, (int) (((i + 1) / GRID_SIZE) * getHeight()), getWidth(),
+                            (int) (((i + 1) / GRID_SIZE) * getHeight()));
+                }
+
+                g2d.setFont(new Font("SansSerif", 0, GRID_FONT_SIZE));
+                // next, draw the labels for the quadrants
+                for (int i = 0; i < GRID_SIZE; i++) {
+                    for (int j = 0; j < GRID_SIZE; j++) {
+                        g2d.drawString("" + (j * (int) GRID_SIZE + (i + 1)),
+                                (int) ((i / GRID_SIZE) * getWidth()) + GRID_TEXT_ALIGN_X,
+                                (int) ((j / GRID_SIZE) * getHeight()) + GRID_TEXT_ALIGN_Y);
+
+                    }
                 }
             }
 

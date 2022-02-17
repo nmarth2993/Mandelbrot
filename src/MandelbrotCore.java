@@ -26,6 +26,7 @@ public class MandelbrotCore {
     private double yRange;
 
     private int colorMode;
+    private boolean overlay;
 
     public MandelbrotCore(ComplexCoordinate xyStart, double xRange, double yRange) {
         this.xyStart = xyStart;
@@ -162,6 +163,14 @@ public class MandelbrotCore {
         return (yRange() / HEIGHT) * (1 / DENSITY);
         // reciprocal of density constant
         // because half density only plots every 2 points
+    }
+
+    public boolean isOverlay() {
+        return overlay;
+    }
+
+    public void setOverlay(boolean overlay) {
+        this.overlay = overlay;
     }
 
     // public void resetZoom() {

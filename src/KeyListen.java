@@ -24,6 +24,9 @@ public class KeyListen implements KeyListener {
         }
         if (e.getKeyCode() == KeyEvent.VK_SPACE || e.getKeyCode() == KeyEvent.VK_S) {
             core.nextColorMode();
+        } else if (e.getKeyCode() == KeyEvent.VK_O) {
+            // toggle overlay
+            core.setOverlay(!core.isOverlay());
         }
         // else if (e.getKeyCode() == KeyEvent.VK_R) {
         // synchronized (core) {

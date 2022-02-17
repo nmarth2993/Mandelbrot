@@ -64,6 +64,9 @@ public class JuliaPanel extends JPanel {
                         }
                     }
 
+                    // XXX: if there's a very fine grid of white pixels that overlays the image,
+                    // make sure that the application scaling factor is at 100%
+                    // 125% introduced the grid appearance but 100% fixed the problem
                     g2d.setColor(drawColor);
                     g2d.drawLine(xPixel, yPixel, xPixel, yPixel);
                 }
